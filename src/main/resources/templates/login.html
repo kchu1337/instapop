@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:replace="fragments/bootstrapheader :: jquery"></div>
+    <div th:replace="fragments/bootstrapheader :: bsheader"></div>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+
+    <div th:replace="fragments/navbar :: navbar"></div>
+    <div class="wrapper">
+        <div class="container">
+    <div th:if="${param.error}">
+    Invalid username and password.
+    </div>
+    <div th:if="${param.logout}">
+    You have been logged out.
+    </div>
+
+        <form th:action="@{/login}" method="post">
+            <table>
+                    <tr>
+                        <td> Email: </td>
+
+                        <td><div th:class="(${param.error}) ? 'form-group has-error has-feedback': 'form-group'">
+                                <input type="email" name="username"  class="form-control"/>
+                            </div></td>
+                    </tr>
+                    <tr>
+                        <td> Password:</td>
+                        <td><div th:class="(${param.error}) ? 'form-group has-error has-feedback': 'form-group'">
+                            <input type="password" name="password"  class="form-control"/>
+                        </div></td>
+                    </tr>
+
+            <tr>
+                <td><div>
+                <button type="submit" class="btn btn-round btn-info" data-toggle="morphing" data-rotation-color="azure" value="Sign In">Sign In</button>
+            </div></td>
+            </tr>
+            </table>
+        </form>
+    </div>
+    </div>
+</body>
+</html>

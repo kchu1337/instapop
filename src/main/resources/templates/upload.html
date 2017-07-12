@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org" xmlns:sec="www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Upload</title>
+    <th:block th:replace="fragments/bootstrapheader :: bsheader"></th:block>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="container">
+    <h1>Spring Boot file upload example</h1>
+    <form th:object="${image}" method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file"/><br/><br/>
+        <input type="text" name="caption" th:field="*{caption}"/><br/>
+        <input type="submit" value="Submit"/>
+    </form>
+    <div th:if="${message}">
+        <h2 th:text="${message}"/><br/><br/>
+    </div>
+
+
+    <div class="row">
+        <th:block th:each="image: ${imageList}">
+            <div class="col-md-3">
+
+                <div th:utext="${image.imgsrc}">
+
+                </div>
+
+                <p th:text="${image.caption}">Caption</p>
+            </div>
+        </th:block>
+    </div>
+
+</div>
+<th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
+
+
+</body>
+</html>

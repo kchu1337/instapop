@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <div th:replace="fragments/bootstrapheader :: jquery"></div>
+    <div th:replace="fragments/bootstrapheader :: bsheader"></div>
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class= "col-md-4 col-md-offset-1">
+    <form autocomplete = "off" th:action="@{/register}" th:object="${user}" method="post">
+        <table>
+            <tr>
+                <td> Email: </td>
+                <td><div th:class="(${#fields.hasErrors('email')}) ? 'form-group has-error has-feedback': 'form-group'">
+                    <input type="email" name="email"  class="form-control" th:field="*{email}"/>
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</span>
+                </div></td>
+            </tr>
+            <tr>
+                <td> Name:</td>
+                <td><div th:class="(${#fields.hasErrors('name')}) ? 'form-group has-error has-feedback': 'form-group'">
+                    <input type="text" name="name"  class="form-control" th:field="*{name}"/>
+                </div></td>
+            </tr>
+            <tr>
+                <td> Password:</td>
+                <td><div th:class="(${#fields.hasErrors('password')}) ? 'form-group has-error has-feedback': 'form-group'">
+                    <input type="password" name="password"  class="form-control" th:field="*{password}"/>
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span>
+                </div></td>
+            </tr>
+        </table>
+
+        <select class="selectpicker" data-style="form-control" data-width="25%" title = "Choose Account Type" th:field = "*{authority}">
+
+            <option value="USER">Job Seeker</option>
+            <option value="RECRUITER">Recruiter</option>
+        </select>
+        <span th:if="${#fields.hasErrors('authority')}" th:errors="*{authority}">Error</span>
+        <br/>
+        <br/>
+        <div class= "col-md-3">
+            <button type="submit" class="btn btn-round btn-info" data-toggle="morphing" data-rotation-color="azure" value="Sign Up">Sign Up</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

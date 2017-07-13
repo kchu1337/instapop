@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
+    <title>Image</title>
+</head>
+<body>
+<style>
+    .icon-gray {
+        fill:gray
+    }
+
+    .icon-blue {
+        fill:skyblue
+    }
+
+    .icon-red {
+        fill: red;
+    }
+    .p{
+        size: 20;
+    }
+
+
+</style>
+<th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="row">
+    <div class="col-md-3 col-md-offset-2">
+
+        <font size="16" th:text = "${image.user.name}"></font>
+        <svg th:if="${followButton} == 'Click to Unfollow'" width="32" height="32" viewBox="0 0 32 32" id = "user" >
+            <path class = "icon-blue" d="M30 19l-9 9-3-3-2 2 5 5 11-11z"></path>
+            <path class = "icon-blue" d="M14 24h10v-3.598c-2.101-1.225-4.885-2.066-8-2.321v-1.649c2.203-1.242 4-4.337 4-7.432 0-4.971 0-9-6-9s-6 4.029-6 9c0 3.096 1.797 6.191 4 7.432v1.649c-6.784 0.555-12 3.888-12 7.918h14v-2z"></path>
+        </svg>
+        <br/>
+        <button type="button" class="btn btn-primary" onclick="follow()" id = "followBUtton" th:text = "${followButton}"></button>
+        <br/>
+        <div><br/></div>
+        <th:block th:utext="${image.imgsrc}"></th:block>
+
+    </div>
+    <div class="col-md-4">
+        <table>
+            <tr>
+                <td><svg width="32" height="32" viewBox="0 0 32 32" id = "heart"  >
+                    <path th:class="${likeButton} == 'Click to Unlike'? 'icon-red':'icon-gray'"
+                          d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path>
+                </svg><font size="16" th:text="${likeCount}"></font>
+                    <br/>
+                    <button type="button" class="btn btn-primary" id = "likeButton" onclick = "like()" th:text = "${likeButton}"></button>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        <br/>
+        <table>
+            <th><p>Comments</p></th>
+
+            <tr th:each="comment: ${commentList}">
+                <td>
+                    <div th:text = "${comment.user.getName()}"></div>
+                    <div th:text = "${comment.text}"></div>
+                <br/>
+
+                </td>
+            </tr>
+        </table>
+        <form th:action="@{/addcomment/{id} (id = ${image.id})}" th:object="${comment}" method="post">
+            <div class="form-group">
+                <textarea class="form-control" rows="5" id="text" th:field="*{text}"/>
+            </div>
+            <button type="submit" class="btn btn-primary" name = "action" value = "submit">Add Comment</button>
+        </form>
+    </div>
+</div>
+
+
+<script  th:inline="javascript">
+    /*<![CDATA[*/
+    function like() {
+        window.location.href = "/like/"+[[${image.id}]];
+    }
+
+    function follow() {
+        window.location.href = "/followfromimage/"+[[${image.id}]];
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

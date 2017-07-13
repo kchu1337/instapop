@@ -6,18 +6,17 @@
 <body>
 <th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
 <div th:replace="fragments/navbar :: navbar"></div>
+
 <div class="row">
     <th:block th:each="image: ${imageList}">
         <div class="col-md-3">
             <br/>
             <br/>
-            <a th:href = "@{'/userimages/' +${image.user.id}}" size = "14" th:text = "${image.user.name}"></a>
-            <br/>
             <a th:href="@{'/view/' + ${image.id}}" th:utext="${image.imgsrc}"></a>
-
         </div>
     </th:block>
 </div>
+<body>
 
 </body>
 </html>

@@ -3,9 +3,6 @@ package com.kc1337.models;
 import javax.persistence.*;
 import java.util.Set;
 
-/**
- * Created by student on 7/10/17.
- */
 @Entity
 public class Image {
     @Id
@@ -17,6 +14,8 @@ public class Image {
     @ManyToOne()
     @JoinColumn(name = "userdata_id")
     private User user;
+    @OneToMany(mappedBy = "image", cascade = CascadeType.PERSIST)
+    private Set<Comment> comments;
     @ManyToMany
     @JoinTable(name="likes",
             joinColumns=
@@ -65,4 +64,30 @@ public class Image {
     public void setUser(User userId) {
         this.user = userId;
     }
+
+    public Set<User> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<User> likes) {
+        this.likes = likes;
+    }
+
+    public int likesCount() {
+        return likes.size();
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public boolean equals(Image image2){
+        return image2.getId() == this.id;
+    }
+
+
 }

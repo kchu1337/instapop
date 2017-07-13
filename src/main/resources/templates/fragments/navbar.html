@@ -46,8 +46,13 @@
                     </li>
 
                     <li sec:authorize="hasAuthority('USER')">
-                        <a href = "/myresume">See My Resume</a>
+                        <a href = "/myimages">See My Images</a>
                     </li>
+
+                    <li sec:authorize="hasAuthority('USER')">
+                        <a href = "/myfeed">See My Subscriptions</a>
+                    </li>
+
                     <li sec:authorize="isAuthenticated()">
                         <a href = "/notifications">Notifications</a>
                     </li>

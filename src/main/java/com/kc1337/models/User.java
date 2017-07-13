@@ -21,8 +21,12 @@ public class User {
     private String authority;
     @Value("TRUE")
     private boolean enabled;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Set<Image> images;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private Set<Comment> comments;
     @ManyToMany
     @JoinTable(name="likes",
             joinColumns=
@@ -31,6 +35,24 @@ public class User {
             @JoinColumn(name="image_id", referencedColumnName="id")
     )
     private Set<Image> likes;
+
+    @ManyToMany
+    @JoinTable(name="follow",
+            joinColumns=
+            @JoinColumn(name="follower_id", referencedColumnName="id"),
+            inverseJoinColumns=
+            @JoinColumn(name="followed_id", referencedColumnName="id")
+    )
+    private Set<User> followsList;
+
+    @ManyToMany
+    @JoinTable(name="follow",
+            joinColumns=
+            @JoinColumn(name="followed_id", referencedColumnName="id"),
+            inverseJoinColumns=
+            @JoinColumn(name="follower_id", referencedColumnName="id")
+    )
+    private Set<User> followerList;
 
     public String getName() {
         return name;
@@ -86,5 +108,41 @@ public class User {
 
     public void setImages(Set<Image> images) {
         this.images = images;
+    }
+
+    public Set<User> getFollowsList() {
+        return followsList;
+    }
+
+    public void setFollowsList(Set<User> followsList) {
+        this.followsList = followsList;
+    }
+
+    public Set<User> getFollowerList() {
+        return followerList;
+    }
+
+    public void setFollowerList(Set<User> followerList) {
+        this.followerList = followerList;
+    }
+
+    public Set<Image> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<Image> likes) {
+        this.likes = likes;
+    }
+
+    public boolean equals(User user2){
+        return user2.getId() == this.id;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }

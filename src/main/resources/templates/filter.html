@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class = "container" >
+    <div id = "filter"><th:block th:utext="${original}"> </th:block></div>
+    <br/>
+    <button type="button" class="btn btn-primary" onclick="original()" id = "origin">Original</button>
+    <button type="button" class="btn btn-primary" onclick="sepia()" id = "sepia">Sepia</button>
+    <button type="button" class="btn btn-primary" onclick="bw()" id = "bw">Grayscale</button>
+    <button type="button" class="btn btn-primary" onclick="pixelate()" id = "pixelate">Pixelate</button>
+    <br/>
+    <br/>
+    <button type="button" class="btn btn-round btn-info" data-toggle="morphing" data-rotation-color="azure" onclick="saveFilter()">Save</button>
+</div>
+
+
+<script  th:inline="javascript">
+    /*<![CDATA[*/
+    var filterType = "";
+    function original() {
+        document.getElementById("filter").innerHTML = [[${original}]];
+        document.getElementById("origin").className = "btn btn-primary btn-fill";
+        document.getElementById("sepia").className = "btn btn-primary";
+        document.getElementById("bw").className = "btn btn-primary";
+        document.getElementById("pixelate").className = "btn btn-primary";
+        filterType = "original";
+    }
+    function sepia() {
+        document.getElementById("filter").innerHTML = [[${sepiaUrl}]];
+        document.getElementById("origin").className = "btn btn-primary";
+        document.getElementById("sepia").className = "btn btn-primary btn-fill";
+        document.getElementById("bw").className = "btn btn-primary";
+        document.getElementById("pixelate").className = "btn btn-primary";
+        filterType = "sepia";
+    }
+    function bw() {
+        document.getElementById("filter").innerHTML = [[${bwUrl}]];
+        document.getElementById("origin").className = "btn btn-primary";
+        document.getElementById("sepia").className = "btn btn-primary";
+        document.getElementById("bw").className = "btn btn-primary btn-fill";
+        document.getElementById("pixelate").className = "btn btn-primary";
+        filterType = "bw";
+    }
+    function pixelate() {
+        document.getElementById("filter").innerHTML = [[${pixelateUrl}]];
+        document.getElementById("origin").className = "btn btn-primary";
+        document.getElementById("sepia").className = "btn btn-primary";
+        document.getElementById("bw").className = "btn btn-primary";
+        document.getElementById("pixelate").className = "btn btn-primary btn-fill";
+        filterType = "pixelate";
+    }
+    function saveFilter(){
+        window.location.href = "/savefilter/"+[[${imageId}]]+"/"+filterType;
+    }
+    /*]]>*/
+    </script>
+
+</body>
+</html>

@@ -32,28 +32,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">ConnectUp</a>
+                <a class="navbar-brand" href="/">InstaPOP</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li sec:authorize="isAuthenticated()">
-                        <a href = "/search">Search Users</a>
+                        <a href = "/upload">Upload Images</a>
                     </li>
                     <li sec:authorize="hasAuthority('USER')">
-                        <a href = "/searchjobs">Search Jobs</a>
-                    </li>
-                    <li sec:authorize="hasAuthority('USER')">
-                        <a href = "/add">Add New Resume</a>
+                        <a href = "/allimages">See All Images</a>
                     </li>
 
                     <li sec:authorize="hasAuthority('USER')">
                         <a href = "/myresume">See My Resume</a>
-                    </li>
-
-                    <li sec:authorize="hasAuthority('RECRUITER')">
-                        <a href = "/postjob">Post a Job</a>
                     </li>
                     <li sec:authorize="isAuthenticated()">
                         <a href = "/notifications">Notifications</a>

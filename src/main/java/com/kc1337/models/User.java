@@ -3,6 +3,7 @@ package com.kc1337.models;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by student on 6/28/17.
@@ -20,6 +21,16 @@ public class User {
     private String authority;
     @Value("TRUE")
     private boolean enabled;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Image> images;
+    @ManyToMany
+    @JoinTable(name="likes",
+            joinColumns=
+            @JoinColumn(name="user_id", referencedColumnName="id"),
+            inverseJoinColumns=
+            @JoinColumn(name="image_id", referencedColumnName="id")
+    )
+    private Set<Image> likes;
 
     public String getName() {
         return name;
@@ -67,5 +78,13 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
     }
 }

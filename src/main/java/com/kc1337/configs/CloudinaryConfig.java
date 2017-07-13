@@ -13,6 +13,8 @@ import java.util.Map;
 @Component
 public class CloudinaryConfig {
     private Cloudinary cloudinary;
+    private final int resizeHeight = 400;
+    private final int resizeWidth = 300;
     @Autowired
     public CloudinaryConfig(@Value("${cloudinary.apikey}") String key,
                             @Value("${cloudinary.apisecret}") String secret,
@@ -42,7 +44,28 @@ public class CloudinaryConfig {
 
     public String createUrl(String name, int width, int height, String action){
         return cloudinary.url()
-                .transformation(new Transformation().width(width).height(height).border("2px_solid_black").crop(action))
+                .transformation(new Transformation().width(resizeWidth).height(height).border("2px_solid_black").crop(action))
+                .imageTag(name);
+    }
+
+    public String transformBWUrl(String name){
+        return cloudinary.url()
+                .transformation(new Transformation().width(resizeWidth).height(resizeHeight).border("2px_solid_black").crop("pad")
+                .chain().effect("grayscale"))
+                .imageTag(name);
+    }
+
+    public String transformSepiaUrl(String name){
+        return cloudinary.url()
+                .transformation(new Transformation().width(resizeWidth).height(resizeHeight).border("2px_solid_black").crop("pad")
+                .chain().effect("sepia"))
+                .imageTag(name);
+    }
+
+    public String transformPixelateUrl(String name){
+        return cloudinary.url()
+                .transformation(new Transformation().width(resizeWidth).height(resizeHeight).border("2px_solid_black").crop("pad")
+                .chain().effect("pixelate"))
                 .imageTag(name);
     }
 }

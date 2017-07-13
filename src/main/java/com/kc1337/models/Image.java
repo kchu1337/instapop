@@ -1,9 +1,7 @@
 package com.kc1337.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by student on 7/10/17.
@@ -12,15 +10,27 @@ import javax.persistence.Id;
 public class Image {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int id;
+    private long id;
     private String imgsrc;
     private String caption;
     private String imgname;
-    public int getId() {
+    @ManyToOne()
+    @JoinColumn(name = "userdata_id")
+    private User user;
+    @ManyToMany
+    @JoinTable(name="likes",
+            joinColumns=
+            @JoinColumn(name="image_id", referencedColumnName="id"),
+            inverseJoinColumns=
+            @JoinColumn(name="user_id", referencedColumnName="id")
+    )
+    private Set<User> likes;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -48,4 +58,11 @@ public class Image {
         this.imgname = imgname;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User userId) {
+        this.user = userId;
+    }
 }

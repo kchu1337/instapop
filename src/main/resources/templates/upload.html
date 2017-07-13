@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="www.thymeleaf.org" xmlns:sec="www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Upload</title>
-    <th:block th:replace="fragments/bootstrapheader :: bsheader"></th:block>
+    <th:block th:replace="base :: bootstrap"></th:block>
+
 </head>
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
@@ -21,18 +19,7 @@
     </div>
 
 
-    <div class="row">
-        <th:block th:each="image: ${imageList}">
-            <div class="col-md-3">
 
-                <div th:utext="${image.imgsrc}">
-
-                </div>
-
-                <p th:text="${image.caption}">Caption</p>
-            </div>
-        </th:block>
-    </div>
 
 </div>
 <th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>

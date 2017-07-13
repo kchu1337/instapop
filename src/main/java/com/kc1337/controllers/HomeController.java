@@ -6,11 +6,9 @@ import com.kc1337.models.*;
 import com.kc1337.repositories.*;
 import com.kc1337.services.*;
 
-import com.google.common.collect.Lists;
-import it.ozimov.springboot.mail.model.Email;
-import it.ozimov.springboot.mail.model.defaultimpl.DefaultEmail;
-import it.ozimov.springboot.mail.service.EmailService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,10 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.mail.internet.InternetAddress;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -31,7 +27,7 @@ import java.util.Map;
  */
 @Controller
 public class HomeController {
-
+//https://jsfiddle.net/jznbkcnp/1/
 
 
     @Autowired
@@ -52,14 +48,9 @@ public class HomeController {
     @RequestMapping("/")
     public String home(Model model){
 
-        return "home";
+        return "index";
     }
 
-    @RequestMapping("/login")
-    public String login(Model model){
-
-        return "login";
-    }
 
     @GetMapping("/upload")
     public String uploadForm(Model model){
@@ -67,7 +58,8 @@ public class HomeController {
         return "upload";
     }
     @PostMapping("/upload")
-    public String singleImageUpload(@RequestParam("file") MultipartFile file,  RedirectAttributes redirectAttributes,@ModelAttribute Image image, Model model){
+    public String singleImageUpload(@RequestParam("file") MultipartFile file,  RedirectAttributes redirectAttributes,
+                                    @ModelAttribute Image image, Model model){
         if (file.isEmpty()){
             model.addAttribute("message","Please select a file to upload");
             return "upload";
@@ -78,16 +70,58 @@ public class HomeController {
                     "You successfully uploaded '" + file.getOriginalFilename() + "'");
             model.addAttribute("imageurl", uploadResult.get("url"));
             String filename = uploadResult.get("public_id").toString() + "." + uploadResult.get("format").toString();
-            model.addAttribute("sizedimageurl", cloudc.createUrl(filename,300,400, "scale"));
+            model.addAttribute("sizedimageurl", cloudc.createUrl(filename,300,400, "pad"));
             image.setImgname(filename);
-            image.setImgsrc((String)  cloudc.createUrl(filename,300,400, "scale"));
+            image.setImgsrc((String)  cloudc.createUrl(filename,300,400, "pad"));
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String email = auth.getName();
+            User user =  userRepository.findByEmail(email);
+            image.setUser(user);
             imageRepository.save(image);
             model.addAttribute("imageList", imageRepository.findAll());
         } catch (IOException e){
             e.printStackTrace();
             model.addAttribute("message", "Sorry I can't upload that!");
         }
-        return "upload";
+        return "redirect:/filter/"+image.getId();
+    }
+
+    @RequestMapping("/filter/{id}")
+    public String seeFilter(@PathVariable("id") long id, Model model){
+        Image image = imageRepository.findOne(id);
+        String filename = image.getImgname();
+        model.addAttribute("imageId", id);
+        model.addAttribute("original", cloudc.createUrl(filename,300,400, "pad"));
+        model.addAttribute("bwUrl", cloudc.transformBWUrl(filename));
+        model.addAttribute("sepiaUrl", cloudc.transformSepiaUrl(filename));
+        model.addAttribute("pixelateUrl", cloudc.transformPixelateUrl(filename));
+        return "filter";
+    }
+
+    @RequestMapping("/savefilter/{id}/{filter}")
+    public String saveFilger(@PathVariable("id") long id, @PathVariable("filter") String filter, Model model){
+        Image image = imageRepository.findOne(id);
+        String filename = image.getImgname();
+        switch (filter){
+            case "original":
+                image.setImgsrc(cloudc.createUrl(filename,300,400, "pad"));
+                imageRepository.save(image);
+                break;
+            case "sepia":
+                image.setImgsrc(cloudc.transformSepiaUrl(filename));
+                imageRepository.save(image);
+                break;
+            case "bw":
+                image.setImgsrc(cloudc.transformBWUrl(filename));
+                imageRepository.save(image);
+                break;
+            case "pixelate":
+                image.setImgsrc(cloudc.transformPixelateUrl(filename));
+                imageRepository.save(image);
+                break;
+        }
+
+        return "redirect:/";
     }
 
     @RequestMapping("/login")
@@ -96,10 +130,24 @@ public class HomeController {
 
     }
 
-    @RequestMapping(value="/register", method = RequestMethod.GET)
+    @GetMapping("/register")
     public String showRegistrationPage(Model model){
         model.addAttribute("user", new User());
-        return "registration";
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String saveAccount(@Valid User user, BindingResult result, Model model){
+        model.addAttribute("user", user);
+        userValidator.validate(user,result);
+        if (result.hasErrors()){
+            return "createacc";
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEnabled(true);
+        userRepository.save(user);
+        return "redirect:/";
     }
 
 }

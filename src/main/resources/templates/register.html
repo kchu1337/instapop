@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <div th:replace="fragments/bootstrapheader :: jquery"></div>
-    <div th:replace="fragments/bootstrapheader :: bsheader"></div>
+
+    <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
     <title>Title</title>
 </head>
 <body>
+<div th:replace="fragments/bootstrapheader :: jquery"></div>
 <div th:replace="fragments/navbar :: navbar"></div>
 <div class= "col-md-4 col-md-offset-1">
     <form autocomplete = "off" th:action="@{/register}" th:object="${user}" method="post">
@@ -19,7 +19,7 @@
                 </div></td>
             </tr>
             <tr>
-                <td> Name:</td>
+                <td> UserName:</td>
                 <td><div th:class="(${#fields.hasErrors('name')}) ? 'form-group has-error has-feedback': 'form-group'">
                     <input type="text" name="name"  class="form-control" th:field="*{name}"/>
                 </div></td>
@@ -35,8 +35,7 @@
 
         <select class="selectpicker" data-style="form-control" data-width="25%" title = "Choose Account Type" th:field = "*{authority}">
 
-            <option value="USER">Job Seeker</option>
-            <option value="RECRUITER">Recruiter</option>
+            <option value="USER">User</option>
         </select>
         <span th:if="${#fields.hasErrors('authority')}" th:errors="*{authority}">Error</span>
         <br/>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="row">
+    <th:block th:each="image: ${imageList}">
+        <div class="col-md-3">
+
+            <div th:text = "${image.user.name}"></div>
+            <br/>
+            <a th:href="@{'/view/' + ${image.id}}" th:utext="${image.imgsrc}"></a>
+
+        </div>
+    </th:block>
+</div>
+
+</body>
+</html>

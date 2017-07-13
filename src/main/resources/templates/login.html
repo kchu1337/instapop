@@ -2,14 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <div th:replace="fragments/bootstrapheader :: jquery"></div>
-    <div th:replace="fragments/bootstrapheader :: bsheader"></div>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
 </head>
 <body>
-
+<th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
     <div th:replace="fragments/navbar :: navbar"></div>
     <div class="wrapper">
         <div class="container">

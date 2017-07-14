@@ -19,6 +19,7 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors){
         User user = (User) target;
         String email = user.getEmail();
+        String name = user.getName();
         String password = user.getPassword();
         String authority = user.getAuthority();
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "user.name.empty");;
@@ -26,6 +27,9 @@ public class UserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "user.password.empty");
         if(userRepository.countByEmail(email)>0){
             errors.rejectValue("email","user.email.duplicate");
+        }
+        if(userRepository.countByName(name)>0){
+            errors.rejectValue("name","user.name.duplicate");
         }
         if(password.length() < 5){
             errors.rejectValue("password","user.password.tooShort");

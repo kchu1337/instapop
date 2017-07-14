@@ -22,6 +22,7 @@
                 <td> UserName:</td>
                 <td><div th:class="(${#fields.hasErrors('name')}) ? 'form-group has-error has-feedback': 'form-group'">
                     <input type="text" name="name"  class="form-control" th:field="*{name}"/>
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</span>
                 </div></td>
             </tr>
             <tr>

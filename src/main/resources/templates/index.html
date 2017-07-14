@@ -6,14 +6,45 @@
     <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
 
     <title>Home</title>
+
 </head>
 <body>
+<style>
+    p {
+        margin-left: 10px;
+    }
+
+
+</style>
 <div th:replace="fragments/bootstrapheader :: jquery"></div>
 <div th:replace="fragments/navbar :: navbar"></div>
-<div class="jumbotron">
-    <h1 th:text="${message}"></h1>
-    <p>...</p>
-    <p></p>
+<div class = "col-md-10 col-md-offset-1">
+    <div class="jumbotron">
+        <p sec:authorize="isAuthenticated()">
+          Welcome: <span sec:authentication="name">Bob</span>
+        </p>
+        <p sec:authorize="isAnonymous()">
+            Please
+            <a href = "/register">register </a>
+             or
+            <a href = "/login">login</a>
+        </p>
+        <p>Here are some recently uploaded images</p>
+    </div>
+</div>
+<div class="row">
+    <th:block th:each="image: ${imageList}">
+        <div class="col-md-3">
+            <br/>
+            <br/>
+            <i class = "size150 pe-7s-user"></i><a class = "size150" th:href = "@{'/userimages/' +${image.user.id}}" size = "14" th:text = "${image.user.name}"></a>
+            <br/>
+            <i class = "size150 pe-7s-like" size = "13" th:text = "${image.likesCount()}"></i>
+            <i class = "tabsmall size150 pe-7s-comment" size = "13" th:text = "${image.commentCount()}"></i>
+            <br/>
+            <a th:href="@{'/view/' + ${image.id}}" th:utext="${image.imgsrc}"></a>
+        </div>
+    </th:block>
 </div>
 </body>
 </html>

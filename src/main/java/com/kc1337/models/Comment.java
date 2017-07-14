@@ -52,4 +52,8 @@ public class Comment {
     public void setText(String text) {
         this.text = text;
     }
+
+    public int compareTo(Comment comment2){
+        return (int)(comment2.getId()- this.id);
+    }
 }

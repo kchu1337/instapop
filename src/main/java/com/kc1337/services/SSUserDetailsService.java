@@ -28,7 +28,7 @@ public class SSUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            User user = userRepository.findByEmail(username);
+            User user = userRepository.findByName(username);
             if (user == null) {
                 LOGGER.debug("User not found");
                 return null;
@@ -36,7 +36,7 @@ public class SSUserDetailsService implements UserDetailsService {
             LOGGER.debug("User found");
             Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
             authorities.add(new SimpleGrantedAuthority(user.getAuthority()));
-            return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(), authorities);
+            return new org.springframework.security.core.userdetails.User(user.getName(),user.getPassword(), authorities);
 
         }
         catch(Exception e){

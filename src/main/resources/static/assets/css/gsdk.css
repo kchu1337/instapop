@@ -3130,12 +3130,10 @@ body > .navbar-collapse.collapse {
   position: relative;
   display: inline-block;
   text-align: center;
-  width: 100%;
 }
 .btn-morphing .btn-toggle {
   display: block;
   margin: 0 auto;
-  width: 100%;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
@@ -6355,3 +6353,37 @@ body > .navbar-collapse.collapse {
   padding: 0 0 3px;
   display: block;
 }
+
+ .icon-gray {
+   fill:gray
+ }
+
+.icon-blue {
+  fill:skyblue
+}
+
+.icon-red {
+  fill: red;
+}
+div.row {
+  margin-left: 80px;
+}
+div.col-md-3{
+  height:550px;
+}
+
+.size150 {
+  font-size:150%;
+}
+
+.tabsmall {
+  padding-left: 1em;
+}
+.btn-medsize{
+  width:100px;
+}
+
+
+
+
+

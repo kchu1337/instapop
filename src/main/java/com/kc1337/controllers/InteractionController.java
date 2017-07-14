@@ -14,6 +14,8 @@ package com.kc1337.controllers;
         import org.springframework.web.bind.annotation.*;
 
         import java.util.ArrayList;
+        import java.util.Collections;
+        import java.util.List;
         import java.util.Set;
 
 
@@ -46,10 +48,11 @@ public class InteractionController {
 
     @RequestMapping("/myimages")
     public String viewMine(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user =  userRepository.findByEmail(email);
+        User user =  getLoggedIn();
         model.addAttribute("imageList", imageRepository.findAllByUser(user));
+        model.addAttribute("user", user);
+        String followButton = isFollower(user)? "Click to Unfollow": "Click to Follow";
+        model.addAttribute("followButton", followButton);
         return "userimages";
     }
 
@@ -57,21 +60,23 @@ public class InteractionController {
     public String viewUsers(@PathVariable("id") int id,Model model) {
         User user =  userRepository.findOne(id);
         model.addAttribute("imageList", imageRepository.findAllByUser(user));
+        model.addAttribute("user", user);
+        String followButton = isFollower(user)? "Click to Unfollow": "Click to Follow";
+        model.addAttribute("followButton", followButton);
         return "userimages";
     }
 
     @RequestMapping("/myfeed")
     public String viewFeed(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user =  userRepository.findByEmail(email);
+        User user =  getLoggedIn();
         Set<User> followed = user.getFollowsList();
         ArrayList<Image> feedImages = new ArrayList<Image>();
         for(User u: followed){
-
+            ArrayList<Image> temp = (ArrayList<Image>) imageRepository.findAllByUser(u);
+            feedImages.addAll(temp);
         }
 
-        model.addAttribute("imageList", imageRepository.findAllByUser(user));
+        model.addAttribute("imageList", feedImages);
         return "allimages";
     }
 
@@ -81,20 +86,20 @@ public class InteractionController {
         model.addAttribute("comment", new Comment());
         String likeButton = isLiked(image)? "Click to Unlike": "Click to Like";
         String followButton = isFollower(image.getUser())? "Click to Unfollow": "Click to Follow";
+        Iterable<Comment> commentList =  commentRepository.findAllByImage(image);
+
         model.addAttribute("image", image);
         model.addAttribute("likeButton", likeButton);
         model.addAttribute("likeCount", image.likesCount());
         model.addAttribute("followButton", followButton);
-        model.addAttribute("commentList", image.getComments());
+        model.addAttribute("commentList", commentList);
         return "view";
     }
 
     @RequestMapping("/like/{id}")
     public String like (@PathVariable("id") long id) {
         Image image = imageRepository.findOne(id);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user =  userRepository.findByEmail(email);
+        User user =  getLoggedIn();
         if(isLiked(image)){
             image.getLikes().remove(user);
             imageRepository.save(image);
@@ -112,11 +117,9 @@ public class InteractionController {
     }
 
     @RequestMapping("/followfromimage/{id}")
-    public String follow (@PathVariable("id") long id) {
+    public String followImage (@PathVariable("id") long id) {
         Image image = imageRepository.findOne(id);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User follower =  userRepository.findByEmail(email);
+        User follower =  getLoggedIn();
         User uploader = image.getUser();
         if(isFollower(uploader)){
             uploader.getFollowerList().remove(follower);;
@@ -134,9 +137,7 @@ public class InteractionController {
     public String addComment (@PathVariable("id") long id, @ModelAttribute Comment comment, Model model){
         model.addAttribute("comment", comment);
         Image image = imageRepository.findOne(id);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user =  userRepository.findByEmail(email);
+        User user =  getLoggedIn();
         comment.setImage(image);
         comment.setUser(user);
         commentRepository.save(comment);
@@ -144,13 +145,27 @@ public class InteractionController {
         return "redirect:/view/"+id;
     }
 
+    @RequestMapping("/followfromuser/{id}")
+    public String followUser (@PathVariable("id") int id) {
+        User uploader = userRepository.findOne(id);
+        User follower =  getLoggedIn();
+        if(isFollower(uploader)){
+            uploader.getFollowerList().remove(follower);;
+            follower.getFollowsList().remove(uploader);
+            userRepository.save(follower);
+        }
+        else{
+            follower.getFollowsList().add(uploader);
+            userRepository.save(follower);
+        }
+
+        return "redirect:/userimages/"+id;
+    }
 
 
     private boolean isLiked(Image image){
         boolean likes = false;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user =  userRepository.findByEmail(email);
+        User user =  getLoggedIn();
         for(User u: image.getLikes()){
             likes = likes || (u.getId()==user.getId());
         }
@@ -159,12 +174,17 @@ public class InteractionController {
 
     private boolean isFollower(User uploader){
         boolean follow = false;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
-        User user =  userRepository.findByEmail(email);
+        User user =  getLoggedIn();
         for(User u: user.getFollowsList()){
             follow = follow || (u.getId()==uploader.getId());
         }
         return follow;
+    }
+
+    private User getLoggedIn(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        return userRepository.findByName(name);
+
     }
 }

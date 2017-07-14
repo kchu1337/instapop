@@ -20,6 +20,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +50,11 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home(Model model){
-
+        List<Image> allImages = (List<Image>) imageRepository.findAll();
+        int start = allImages.size()-8;
+        if (start<0){start = 0;}
+        List<Image> last8 = allImages.subList(start, allImages.size());
+        model.addAttribute("imageList", last8);
         return "index";
     }
 
@@ -60,6 +67,8 @@ public class HomeController {
     @PostMapping("/upload")
     public String singleImageUpload(@RequestParam("file") MultipartFile file,  RedirectAttributes redirectAttributes,
                                     @ModelAttribute Image image, Model model){
+        model.addAttribute("image", image);
+
         if (file.isEmpty()){
             model.addAttribute("message","Please select a file to upload");
             return "upload";
@@ -74,8 +83,8 @@ public class HomeController {
             image.setImgname(filename);
             image.setImgsrc((String)  cloudc.createUrl(filename,300,400, "pad"));
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String email = auth.getName();
-            User user =  userRepository.findByEmail(email);
+            String name = auth.getName();
+            User user =  userRepository.findByName(name);
             image.setUser(user);
             imageRepository.save(image);
             model.addAttribute("imageList", imageRepository.findAll());
@@ -141,7 +150,7 @@ public class HomeController {
         model.addAttribute("user", user);
         userValidator.validate(user,result);
         if (result.hasErrors()){
-            return "createacc";
+            return "register";
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));

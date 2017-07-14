@@ -89,5 +89,9 @@ public class Image {
         return image2.getId() == this.id;
     }
 
+    public int commentCount() {
+        return comments.size();
+    }
+
 
 }

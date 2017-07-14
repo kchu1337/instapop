@@ -20,10 +20,10 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
         <form th:action="@{/login}" method="post">
             <table>
                     <tr>
-                        <td> Email: </td>
+                        <td> Username: </td>
 
                         <td><div th:class="(${param.error}) ? 'form-group has-error has-feedback': 'form-group'">
-                                <input type="email" name="username"  class="form-control"/>
+                                <input type="text" name="username"  class="form-control"/>
                             </div></td>
                     </tr>
                     <tr>

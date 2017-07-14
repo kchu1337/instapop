@@ -13,13 +13,20 @@
     p {
         margin-left: 10px;
     }
+    .myJumbotron {
+        background-color:skyblue;
+        font-size:150%;
+        -webkit-text-fill-color: black; /* Will override color (regardless of order) */
+        -webkit-text-stroke-width: .1px;
+        -webkit-text-stroke-color: white;
+    }
 
 
 </style>
 <div th:replace="fragments/bootstrapheader :: jquery"></div>
 <div th:replace="fragments/navbar :: navbar"></div>
 <div class = "col-md-10 col-md-offset-1">
-    <div class="jumbotron">
+    <div class="jumbotron myJumbotron">
         <p sec:authorize="isAuthenticated()">
           Welcome: <span sec:authentication="name">Bob</span>
         </p>

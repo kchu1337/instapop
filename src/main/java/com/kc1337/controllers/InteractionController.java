@@ -163,6 +163,12 @@ public class InteractionController {
     }
 
 
+    @RequestMapping("/like3/{id}")
+    public String like3 (@PathVariable("id") long id) {
+        return "like";
+    }
+
+
     private boolean isLiked(Image image){
         boolean likes = false;
         User user =  getLoggedIn();

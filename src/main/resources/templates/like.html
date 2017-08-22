@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/bootstrapheader :: bootstrap"></th:block>
+    <script src="/assets/js/angular.min.js" th:src="@{/assets/js/angular.min.js}"></script>
+    <script src="/app/app.module.js" th:src="@{/app/app.module.js}"></script>
+    <script src="/app/interaction.controller.js" th:src="@{/app/interaction.controller.js}"></script>
+    <title>Image</title>
+</head>
+<body ng-app="app">
+<style>
+    .icon-gray {
+        fill:gray
+    }
+
+
+    .icon-red {
+        fill: red;
+    }
+
+
+</style>
+<th:block th:replace="fragments/bootstrapheader :: jquery"></th:block>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="row"  ng-controller="InteractionController">
+    <div class="col-md-4">
+        <p>{{like}}</p>
+        <p>{{likeCount}}</p>
+
+
+                    <button type="button" class="btn btn-primary" id = "likeButton" ng-click = "likes(1)" th:text = "click"></button>
+
+    </div>
+</div>
+</body>
+</html>
